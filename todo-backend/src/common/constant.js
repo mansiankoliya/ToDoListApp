@@ -11,8 +11,22 @@ const ROLES = {
 
 const SALT_LENGTH = 10
 
+const TOKEN_TYPES = {
+    ACCESS: 'access',
+    REFRESH: 'refresh',
+}
+
+const JWT = {
+    ACCESS_SECRET: process.env.JWT_ACCESS_SECRET,
+    REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
+    ACCESS_EXPIRY: '15m',
+    REFRESH_EXPIRY: '7d',
+}
+
 module.exports = {
     STATUS,
     ROLES,
-    SALT_LENGTH
+    SALT_LENGTH,
+    TOKEN_TYPES,
+    JWT
 }

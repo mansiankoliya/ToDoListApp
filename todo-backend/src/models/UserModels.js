@@ -24,6 +24,10 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    isBlock: {
+        type: Boolean,
+        default: false
+    },
     token: {
         type: String
     },
