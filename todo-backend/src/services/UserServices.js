@@ -79,7 +79,7 @@ const loginUser = async (data) => {
 
 //getProfile
 const getProfile = async (id) => {
-    const user = await User.findOne({ _id: id });
+    const user = await User.findById({ _id: id });
 
     if (!user) {
         throw createError(404, "User not found");
