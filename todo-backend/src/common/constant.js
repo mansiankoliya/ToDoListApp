@@ -19,7 +19,7 @@ const TOKEN_TYPES = {
 const JWT = {
     ACCESS_SECRET: process.env.JWT_ACCESS_SECRET,
     REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
-    ACCESS_EXPIRY: '15m',
+    ACCESS_EXPIRY: '1h',
     REFRESH_EXPIRY: '7d',
 }
 

@@ -93,7 +93,9 @@ const getProfile = async (id) => {
 
 //getAllUsers
 const getAllUsers = async (data) => {
-    const { page = 1, limit = 10, filter = {} } = data
+    let { page = 1, limit = 10, filter = {} } = data
+
+    filter.role = filter.role || { $ne: ROLES.ADMIN };
 
     page = parseInt(page);
     limit = parseInt(limit);

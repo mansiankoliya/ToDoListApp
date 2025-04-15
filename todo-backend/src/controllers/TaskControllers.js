@@ -1,8 +1,8 @@
-const { createTask, updateTask, getTask, getAllTask, deleteTask } = require('../services/TaskServices');
+const { createTask, updateTask, getTask, getAllTask, deleteTask, getTaskByUser } = require('../services/TaskServices');
 const createError = require("../utils/createError");
 
 // handleCreateTask
-const handleCreateTask = async (req, res) => {
+const handleCreateTask = async (req, res, next) => {
     try {
         const taskData = req.body;
         const file = req.file;
@@ -17,7 +17,7 @@ const handleCreateTask = async (req, res) => {
 }
 
 // handleUpdateTask
-const handleUpdateTask = async (req, res) => {
+const handleUpdateTask = async (req, res, next) => {
     try {
         const taskData = req.body;
         const file = req.file;
@@ -29,7 +29,7 @@ const handleUpdateTask = async (req, res) => {
 }
 
 //handleGetTask
-const handleGetTask = async (req, res) => {
+const handleGetTask = async (req, res, next) => {
     try {
         const result = await getTask(req.params.id);
         res.status(200).json({ success: true, ...result });
@@ -39,7 +39,7 @@ const handleGetTask = async (req, res) => {
 }
 
 //handleGetAllTask
-const handleGetAllTask = async (req, res) => {
+const handleGetAllTask = async (req, res, next) => {
     try {
         const result = await getAllTask(req.body);
         res.status(200).json({ success: true, ...result });
@@ -49,9 +49,19 @@ const handleGetAllTask = async (req, res) => {
 }
 
 //handleDeleteTask
-const handleDeleteTask = async (req, res) => {
+const handleDeleteTask = async (req, res, next) => {
     try {
         const result = await deleteTask(req.params.id);
+        res.status(200).json({ success: true, ...result });
+    } catch (error) {
+        next(error);
+    }
+}
+
+//handleGetTaskByUser
+const handleGetTaskByUser = async (req, res, next) => {
+    try {
+        const result = await getTaskByUser(req.body);
         res.status(200).json({ success: true, ...result });
     } catch (error) {
         next(error);
@@ -63,5 +73,6 @@ module.exports = {
     handleUpdateTask,
     handleGetTask,
     handleGetAllTask,
-    handleDeleteTask
+    handleDeleteTask,
+    handleGetTaskByUser
 }

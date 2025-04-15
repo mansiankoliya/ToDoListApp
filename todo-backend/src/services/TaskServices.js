@@ -40,7 +40,7 @@ const createTask = async (taskData, file) => {
 
 //updateTask
 const updateTask = async (taskData, file) => {
-    const { id, title, description, status, owner } = taskData;
+    const { id, title, description, status } = taskData;
 
     const existingTask = await Task.findById({ _id: id });
     if (!existingTask) {
@@ -57,7 +57,6 @@ const updateTask = async (taskData, file) => {
     existingTask.title = title || existingTask.title;
     existingTask.description = description || existingTask.description;
     existingTask.status = status || existingTask.status;
-    existingTask.owner = owner || existingTask.owner;
     existingTask.image = imageUrl;
 
     await existingTask.save();
@@ -131,7 +130,54 @@ const deleteTask = async (id) => {
     }
 
     await Task.findByIdAndDelete({ _id: id });
+    return {
+        message: "Task deleted successfully",
+    };
+}
 
+const getTaskByUser = async (data) => {
+    let { userId, page = 1, limit = 10, filter = {} } = data;
+
+    if (!userId) {
+        throw createError(400, "User ID is required");
+    }
+
+    page = parseInt(page);
+    limit = parseInt(limit);
+    const skip = (page - 1) * limit;
+
+    filter.owner = userId
+
+    if (filter.title && filter.title.trim() !== "") {
+        filter.title = { $regex: filter.title.trim(), $options: 'i' };
+    } else {
+        delete filter.title;
+    }
+
+    if (filter.status === "ALL") {
+        delete filter.status;
+    }
+    
+    console.log("filter", filter)
+    const tasks = await Task.find(filter)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean();
+
+    const totalTasks = await Task.countDocuments(filter);
+    const totalPages = Math.ceil(totalTasks / limit);
+
+    return {
+        message: tasks.length ? "User's tasks fetched successfully" : "No tasks found for this user",
+        data: tasks,
+        pagination: {
+            currentPage: page,
+            totalPages,
+            totalTasks,
+            limit,
+        }
+    };
 }
 
 module.exports = {
@@ -139,5 +185,6 @@ module.exports = {
     updateTask,
     getTask,
     getAllTask,
-    deleteTask
+    deleteTask,
+    getTaskByUser
 }

@@ -4,7 +4,7 @@ const createError = require("../utils/createError");
 const jwt = require("jsonwebtoken");
 
 // handleRegister
-const handleRegister = async (req, res) => {
+const handleRegister = async (req, res, next) => {
     try {
         const result = await registerUser(req.body);
         res.status(200).json({ success: true, ...result });
@@ -15,7 +15,7 @@ const handleRegister = async (req, res) => {
 
 
 // handleLogin
-const handleLogin = async (req, res) => {
+const handleLogin = async (req, res, next) => {
     try {
         const result = await loginUser(req.body);
         res.status(200).json({ success: true, ...result });
@@ -45,7 +45,7 @@ const handleRefreshToken = async (req, res, next) => {
 
 
 // handleGetProfile
-const handleGetProfile = async (req, res) => {
+const handleGetProfile = async (req, res, next) => {
     try {
         const result = await getProfile(req.params.id);
         res.status(200).json({ success: true, ...result });
@@ -55,7 +55,7 @@ const handleGetProfile = async (req, res) => {
 }
 
 // handleGetAllUsers
-const handleGetAllUsers = async (req, res) => {
+const handleGetAllUsers = async (req, res, next) => {
     try {
         const result = await getAllUsers(req.body);
         res.status(200).json({ success: true, ...result });
@@ -65,7 +65,7 @@ const handleGetAllUsers = async (req, res) => {
 }
 
 // handleBlockOrUnblockUser
-const handleBlockOrUnblockUser = async (req, res) => {
+const handleBlockOrUnblockUser = async (req, res, next) => {
     try {
         const result = await blockOrUnblockUser(req.params.id, req.body);
         res.status(200).json({ success: true, ...result });
