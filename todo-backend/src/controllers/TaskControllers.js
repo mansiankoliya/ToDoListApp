@@ -1,4 +1,11 @@
-const { createTask, updateTask, getTask, getAllTask, deleteTask, getTaskByUser } = require('../services/TaskServices');
+const {
+    createTask,
+    updateTask,
+    getTask,
+    getAllTask,
+    deleteTask,
+    getTaskByUser
+} = require('../services/TaskServices');
 const createError = require("../utils/createError");
 
 // handleCreateTask

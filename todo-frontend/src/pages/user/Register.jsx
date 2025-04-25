@@ -27,52 +27,149 @@ const UserRegister = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-80">
-                <h2 className="text-xl font-bold mb-4 text-center">Register</h2>
-                {error && <p className="text-red-500 text-sm">{error}</p>}
-                <input
-                    type="name"
-                    name="name"
-                    value={form.name}
-                    onChange={handleChange}
-                    placeholder="name"
-                    required
-                    className="w-full px-3 py-2 border rounded mb-3"
-                />
-                <input
-                    type="email"
-                    name="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    placeholder="Email"
-                    required
-                    className="w-full px-3 py-2 border rounded mb-3"
-                />
-                <input
-                    type="number"
-                    name="mobile"
-                    value={form.mobile}
-                    onChange={handleChange}
-                    placeholder="mobile"
-                    required
-                    className="w-full px-3 py-2 border rounded mb-3"
-                />
-                <input
-                    type="password"
-                    name="password"
-                    value={form.password}
-                    onChange={handleChange}
-                    placeholder="Password"
-                    required
-                    className="w-full px-3 py-2 border rounded mb-4"
-                />
+        // <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        //     <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-80">
+        //         <h2 className="text-xl font-bold mb-4 text-center">Register</h2>
+        //         {error && <p className="text-red-500 text-sm">{error}</p>}
+        //         <input
+        //             type="name"
+        //             name="name"
+        //             value={form.name}
+        //             onChange={handleChange}
+        //             placeholder="name"
+        //             required
+        //             className="w-full px-3 py-2 border rounded mb-3"
+        //         />
+        //         <input
+        //             type="email"
+        //             name="email"
+        //             value={form.email}
+        //             onChange={handleChange}
+        //             placeholder="Email"
+        //             required
+        //             className="w-full px-3 py-2 border rounded mb-3"
+        //         />
+        //         <input
+        //             type="number"
+        //             name="mobile"
+        //             value={form.mobile}
+        //             onChange={handleChange}
+        //             placeholder="mobile"
+        //             required
+        //             className="w-full px-3 py-2 border rounded mb-3"
+        //         />
+        //         <input
+        //             type="password"
+        //             name="password"
+        //             value={form.password}
+        //             onChange={handleChange}
+        //             placeholder="Password"
+        //             required
+        //             className="w-full px-3 py-2 border rounded mb-4"
+        //         />
 
-                <button type="submit" className="bg-blue-500 text-white w-full mt-4 py-2 rounded hover:bg-blue-600 cursor-pointer">
-                    Register
-                </button>
+        //         <button type="submit" className="bg-blue-500 text-white w-full mt-4 py-2 rounded hover:bg-blue-600 cursor-pointer">
+        //             Register
+        //         </button>
+        //     </form>
+        // </div>
+
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4" >
+            <form>
+                <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
+                    <h2 className="text-2xl font-bold text-center text-gray-900">Register</h2>
+
+                    {error && <p className="text-red-500 text-sm">{error}</p>}
+
+                    <div className="mt-6 space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Name</label>
+                            <input
+                                type="name"
+                                name="name"
+                                value={form.name}
+                                onChange={handleChange}
+                                required
+                                placeholder="Enter your Name"
+                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Email</label>
+                            <input
+                                type="email"
+                                name="email"
+                                value={form.email}
+                                onChange={handleChange}
+                                required
+                                placeholder="Enter your Email Address"
+                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Mobile No:-</label>
+                            <input
+                                type="mobile"
+                                name="mobile"
+                                value={form.mobile}
+                                onChange={handleChange}
+                                required
+                                placeholder="Enter your Mobile No"
+                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Password</label>
+                            <input
+                                type="password"
+                                name="password"
+                                value={form.password}
+                                onChange={handleChange}
+                                required
+                                placeholder="Enter your password"
+                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            />
+                        </div>
+
+                        {/* <div className="flex items-center justify-between">
+                              <label className="flex items-center text-sm text-gray-600">
+                                 <input type="checkbox" className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+                                    <span className="ml-2">Remember me</span>
+                              </label>
+                              <div className="text-sm">
+                                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">Forgot your password?</a>
+                              </div>
+                            </div> */}
+
+                        <div>
+                            <button type="submit" onClick={handleSubmit}
+                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none cursor-pointer">
+                                Sign up
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="mt-6 relative">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div className="relative flex justify-center text-sm">
+                            <span className="bg-white px-2 text-gray-500">Or</span>
+                        </div>
+                    </div>
+
+                    <div className="mt-6">
+                        <button
+                            className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 cursor-pointer">
+                            Continue with Google
+                        </button>
+                    </div>
+                </div>
             </form>
-        </div>
+        </div >
 
     );
 };

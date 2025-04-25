@@ -158,7 +158,6 @@ const getTaskByUser = async (data) => {
         delete filter.status;
     }
     
-    console.log("filter", filter)
     const tasks = await Task.find(filter)
         .sort({ createdAt: -1 })
         .skip(skip)

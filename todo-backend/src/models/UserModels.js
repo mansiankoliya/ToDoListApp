@@ -18,12 +18,12 @@ const userSchema = mongoose.Schema({
     },
     mobile: {
         type: String,
-        required: true,
+        required: false,
         unique: true
     },
     password: {
         type: String,
-        required: true
+        required: false
     },
     isBlock: {
         type: Boolean,

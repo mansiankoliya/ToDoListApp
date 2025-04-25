@@ -41,6 +41,7 @@ const UserDashboard = () => {
             setTasks(res.data.data);
             setTotalPages(res.data.pagination.totalPages);
         } catch (err) {
+            console.error(err);
             setError("Failed to fetch tasks");
         } finally {
             setLoading(false);
@@ -81,13 +82,13 @@ const UserDashboard = () => {
         try {
             if (isEditing) {
                 // UPDATE API
-                const res = await api.post(`/task/updateTask`, formData, {
+                await api.post(`/task/updateTask`, formData, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
                 toast.success("Task updated successfully!");
             } else {
                 // CREATE API
-                const res = await api.post("/task/createTask", formData, {
+                await api.post("/task/createTask", formData, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
                 toast.success("Task created successfully!");
@@ -125,6 +126,7 @@ const UserDashboard = () => {
                 toast.success("Task delete successfully!");
             }
         } catch (err) {
+            console.error(err);
             setError("Failed to delete task");
         }
     }

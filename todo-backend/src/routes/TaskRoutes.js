@@ -2,7 +2,14 @@ const router = require('express').Router();
 const upload = require("../middleware/multer");
 const verifyToken = require('../middleware/auth');
 
-const { handleCreateTask, handleUpdateTask, handleGetTask, handleGetAllTask, handleDeleteTask, handleGetTaskByUser } = require("../controllers/TaskControllers");
+const {
+    handleCreateTask,
+    handleUpdateTask,
+    handleGetTask,
+    handleGetAllTask,
+    handleDeleteTask,
+    handleGetTaskByUser
+} = require("../controllers/TaskControllers");
 
 router.post('/createTask', verifyToken, upload.single("image"), handleCreateTask);
 router.post('/updateTask', verifyToken, upload.single("image"), handleUpdateTask);

@@ -1,5 +1,13 @@
 const { JWT } = require('../common/constant');
-const { registerUser, loginUser, getProfile, getAllUsers, blockOrUnblockUser } = require('../services/UserServices');
+const {
+    registerUser,
+    loginUser,
+    // googleLogin,
+    // googleLoginCallBack,
+    getProfile,
+    getAllUsers,
+    blockOrUnblockUser
+} = require('../services/UserServices');
 const createError = require("../utils/createError");
 const jwt = require("jsonwebtoken");
 
@@ -23,6 +31,26 @@ const handleLogin = async (req, res, next) => {
         next(error);
     }
 }
+
+// // handleGoogleLogin
+// const handleGoogleLogin = async (req, res, next) => {
+//     try {
+//         const result = await googleLogin(req, res);
+//         res.status(200).json({ success: true, ...result });
+//     } catch (error) {
+//         next(error);
+//     }
+// }
+
+// //handleGoogleLoginCallback
+// const handleGoogleLoginCallback = async (req, res, next) => {
+//     try {
+//         const result = await googleLoginCallBack(req, res);
+//         res.status(200).json({ success: true, ...result });
+//     } catch (error) {
+//         next(error);
+//     }
+// }
 
 //handleRefreshToken
 const handleRefreshToken = async (req, res, next) => {
@@ -77,6 +105,8 @@ const handleBlockOrUnblockUser = async (req, res, next) => {
 module.exports = {
     handleRegister,
     handleLogin,
+    // handleGoogleLogin,
+    // handleGoogleLoginCallback,
     handleRefreshToken,
     handleGetProfile,
     handleGetAllUsers,
