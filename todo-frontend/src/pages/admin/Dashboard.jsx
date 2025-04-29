@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import api from "../../services/api";
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,18 +14,20 @@ const AdminDashboard = () => {
     const { logout } = useAuth();
     const navigate = useNavigate();
 
-    const fetchUsers = async (page = currentPage) => {
+    const fetchUsers = useCallback(async () => {
         setLoading(true);
         try {
-            const res = await api.post("/user/getAllUsers", { page, limit: 5 });
+            const res = await api.post("/user/getAllUsers", { page: currentPage, limit: 5 });
             setUsers(res.data.data);
             setTotalPages(res.data.pagination.totalPages);
             setLoading(false);
         } catch (err) {
+            console.error(err);
             setError("Failed to fetch users");
+        } finally {
             setLoading(false);
         }
-    };
+    }, [currentPage]);
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages && page !== currentPage) {
@@ -45,13 +47,14 @@ const AdminDashboard = () => {
                 )
             );
         } catch (err) {
+            console.error(err);
             setError("Failed to update user status");
         }
     };
 
     useEffect(() => {
         fetchUsers(currentPage);
-    }, [currentPage]);
+    }, [currentPage, fetchUsers]);
 
     const handleLogout = () => {
         logout();

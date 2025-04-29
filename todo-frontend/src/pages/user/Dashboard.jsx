@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import api from "../../services/api";
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
@@ -26,11 +26,11 @@ const UserDashboard = () => {
     const { logout, auth } = useAuth();
     const navigate = useNavigate();
 
-    const fetchTasks = async (page = currentPage) => {
+    const fetchTasks = useCallback(async () => {
         setLoading(true);
         try {
             const res = await api.post("/task/getTaskByUser", {
-                page,
+                page: currentPage,
                 limit: 5,
                 userId: auth.user._id,
                 filter: {
@@ -46,7 +46,7 @@ const UserDashboard = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [currentPage, auth, searchTerm, filterStatus]);
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages && page !== currentPage) {
@@ -138,11 +138,11 @@ const UserDashboard = () => {
     useEffect(() => {
         setCurrentPage(1);
         fetchTasks(1);
-    }, [filterStatus]);
+    }, [filterStatus, fetchTasks]);
 
     useEffect(() => {
         fetchTasks(currentPage);
-    }, [currentPage]);
+    }, [currentPage, fetchTasks]);
 
     const handleLogout = () => {
         logout();

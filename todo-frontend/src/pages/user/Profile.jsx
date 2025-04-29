@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallBack } from 'react';
 import api from '../../services/api';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,7 +12,7 @@ const Profile = () => {
 
     const navigate = useNavigate();
 
-    const fetchProfile = async () => {
+    const fetchProfile = useCallBack(async () => {
         try {
             const res = await api.get(`/user/profile/${auth.user._id}`);
             setUserData(res.data.data);
@@ -22,11 +22,11 @@ const Profile = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
         fetchProfile();
-    }, []);
+    }, [fetchProfile]);
 
     if (loading) return <div className="text-center mt-10">Loading...</div>;
 

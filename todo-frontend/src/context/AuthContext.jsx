@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useRef, useCallback } from 'react';
 import axios from '../services/api';
 
 const AuthContext = createContext();
@@ -10,43 +10,88 @@ export const AuthProvider = ({ children }) => {
         user: JSON.parse(localStorage.getItem("user")) || null,
     });
 
-    const login = (data) => {
-        console.log("🚀 ~ login ~ data:", data)
-        const { accessToken, refreshToken, user } = data;
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
-        localStorage.setItem("user", JSON.stringify(user));
-        const expirationTime = Date.now() + 60 * 60 * 1000; // 1 hour from now
-        localStorage.setItem("expirationTime", expirationTime);
+    const refreshTimeoutRef = useRef(null);
 
-        setAuth({ accessToken, refreshToken, user });
-    };
-
-    const logout = () => {
+    const logout = useCallback(() => {
+        clearTimeout(refreshTimeoutRef.current);
         localStorage.clear();
         setAuth({ accessToken: null, refreshToken: null, user: null });
-    };
+    }, []);
 
-    const refreshAccessToken = async () => {
+    const refreshAccessToken = useCallback(async () => {
         try {
             const res = await axios.post('/user/refresh-token', {
                 token: auth.refreshToken
             });
             const newToken = res.data.accessToken;
             localStorage.setItem("accessToken", newToken);
+
+            const newExpirationTime = Date.now() + 60 * 60 * 1000;
+            localStorage.setItem("expirationTime", newExpirationTime);
+
             setAuth(prev => ({ ...prev, accessToken: newToken }));
+
+            if (refreshTimeoutRef.current) {
+                clearTimeout(refreshTimeoutRef.current);
+            }
+
+            const currentTime = Date.now();
+            const timeUntilExpiry = newExpirationTime - currentTime;
+            const refreshTime = timeUntilExpiry - 5 * 60 * 1000;
+
+            if (refreshTime > 0) {
+                refreshTimeoutRef.current = setTimeout(() => {
+                    refreshAccessToken();
+                }, refreshTime);
+            } else {
+                refreshAccessToken();
+            }
+
             return newToken;
         } catch {
             logout();
         }
+    }, [auth.refreshToken, logout]);
+
+    const login = (data) => {
+        const { accessToken, refreshToken, user } = data;
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem("user", JSON.stringify(user));
+
+        const expirationTime = Date.now() + 60 * 60 * 1000;
+        localStorage.setItem("expirationTime", expirationTime);
+
+        setAuth({ accessToken, refreshToken, user });
+
+        // Setup auto refresh
+        const timeUntilExpiry = expirationTime - Date.now();
+        const refreshTime = timeUntilExpiry - 5 * 60 * 1000;
+
+        if (refreshTime > 0) {
+            refreshTimeoutRef.current = setTimeout(() => {
+                refreshAccessToken();
+            }, refreshTime);
+        } else {
+            refreshAccessToken();
+        }
     };
 
     useEffect(() => {
-        const expirationTime = localStorage.getItem("expirationTime");
-        if (expirationTime && Date.now() > expirationTime) {
-            logout(); // Remove items from localStorage if expired
+        const expirationTime = parseInt(localStorage.getItem("expirationTime"));
+        if (expirationTime && Date.now() < expirationTime) {
+            const timeUntilExpiry = expirationTime - Date.now();
+            const refreshTime = timeUntilExpiry - 5 * 60 * 1000;
+
+            if (refreshTime > 0) {
+                refreshTimeoutRef.current = setTimeout(() => {
+                    refreshAccessToken();
+                }, refreshTime);
+            } else {
+                refreshAccessToken();
+            }
         }
-    }, []);
+    }, [refreshAccessToken]);
 
     return (
         <AuthContext.Provider value={{ auth, login, logout, refreshAccessToken }}>
@@ -55,4 +100,5 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
-export const useAuth = () => useContext(AuthContext);
+// export const useAuth = () => useContext(AuthContext);
+export default AuthContext;

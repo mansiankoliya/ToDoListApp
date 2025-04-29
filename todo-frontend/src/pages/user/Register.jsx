@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import api from "../../services/api";
 import { useNavigate } from "react-router-dom";
 
@@ -26,54 +25,31 @@ const UserRegister = () => {
         }
     };
 
+    useEffect(() => {
+        const handleMessage = (event) => {
+            if (event.origin !== 'http://localhost:8000') return;
+            const { user } = event.data || {};
+            if (user) {
+                localStorage.setItem("user", JSON.stringify(user));
+                navigate("/user/dashboard");
+            }
+        };
+        window.addEventListener('message', handleMessage);
+        return () => window.removeEventListener('message', handleMessage);
+    }, [navigate]);
+
+    const handleGoogleLogin = () => {
+        const width = 600, height = 700;
+        const left = window.screenX + (window.outerWidth - width) / 2;
+        const top = window.screenY + (window.outerHeight - height) / 2;
+        window.open(
+            'http://localhost:8000/api/user/auth/google',
+            'Google Login',
+            `toolbar=no, menubar=no, width=${width}, height=${height}, top=${top}, left=${left}`
+        );
+    };
+
     return (
-        // <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        //     <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-80">
-        //         <h2 className="text-xl font-bold mb-4 text-center">Register</h2>
-        //         {error && <p className="text-red-500 text-sm">{error}</p>}
-        //         <input
-        //             type="name"
-        //             name="name"
-        //             value={form.name}
-        //             onChange={handleChange}
-        //             placeholder="name"
-        //             required
-        //             className="w-full px-3 py-2 border rounded mb-3"
-        //         />
-        //         <input
-        //             type="email"
-        //             name="email"
-        //             value={form.email}
-        //             onChange={handleChange}
-        //             placeholder="Email"
-        //             required
-        //             className="w-full px-3 py-2 border rounded mb-3"
-        //         />
-        //         <input
-        //             type="number"
-        //             name="mobile"
-        //             value={form.mobile}
-        //             onChange={handleChange}
-        //             placeholder="mobile"
-        //             required
-        //             className="w-full px-3 py-2 border rounded mb-3"
-        //         />
-        //         <input
-        //             type="password"
-        //             name="password"
-        //             value={form.password}
-        //             onChange={handleChange}
-        //             placeholder="Password"
-        //             required
-        //             className="w-full px-3 py-2 border rounded mb-4"
-        //         />
-
-        //         <button type="submit" className="bg-blue-500 text-white w-full mt-4 py-2 rounded hover:bg-blue-600 cursor-pointer">
-        //             Register
-        //         </button>
-        //     </form>
-        // </div>
-
         <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4" >
             <form>
                 <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
@@ -162,7 +138,7 @@ const UserRegister = () => {
                     </div>
 
                     <div className="mt-6">
-                        <button
+                        <button onClick={handleGoogleLogin}
                             className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 cursor-pointer">
                             Continue with Google
                         </button>

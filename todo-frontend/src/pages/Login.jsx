@@ -1,8 +1,7 @@
-import React from 'react';
-import { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import api from "../services/api";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 import { useLocation } from "react-router-dom";
 // import { FaGoogle } from 'react-icons/fa';
 
@@ -38,99 +37,32 @@ const Login = () => {
         navigate("/user/register");
     };
 
-    // const handleGoogleLogin = () => {
-    //     const googleLoginWindow = window.open(
-    //         "http://localhost:8000/api/user/auth/google",
-    //         "_self",
-    //         "width=500,height=600"
-    //     );
-
-    //     // Listen for the token from the popup
-    //     window.addEventListener("message", (event) => {
-    //         if (event.origin !== "http://localhost:8000") return;
-    //         console.log("🚀 ~ window.addEventListener ~ event:", event)
-    //         if (event.data && event.data.accessToken) {
-    //             login(event.data);
-    //             navigate("/user/dashboard");
-    //         }
-    //     });
-    // };
-
-    // const handleGoogleLogin = () => {
-    //     const popup = window.open(
-    //         "http://localhost:8000/api/user/auth/google",
-    //         "_blank",
-    //         "width=500,height=600"
-    //     );
-
-    //     const listener = (event) => {
-    //         if (event.origin !== "http://localhost:8000") return;
-    //         console.log("🚀 ~ listener ~ event:", event)
-
-    //         if (event.data && event.data.accessToken) {
-    //             console.log("----hello");
-
-    //             login(event.data);
-    //             navigate("/user/dashboard");
-    //         }
-    //         // Cleanup
-    //         window.removeEventListener("message", listener);
-    //     };
-
-    //     window.addEventListener("message", listener);
-    // };
-
-
+    useEffect(() => {
+        const handleMessage = (event) => {
+            if (event.origin !== 'http://localhost:8000') return;
+            const { accessToken, refreshToken, user } = event.data || {};
+            if (accessToken && refreshToken && user) {
+                login(event.data)
+                navigate("/user/dashboard");
+            }
+        };
+        window.addEventListener('message', handleMessage);
+        return () => window.removeEventListener('message', handleMessage);
+    }, [navigate, login]);
 
     const handleGoogleLogin = () => {
-        // window.open("http://localhost:8000/api/user/auth/google", "_self");
-        // window.open("http://localhost:8000/api/user/auth/google", "_blank", "width=500,height=600");
-        window.open("http://localhost:8000/api/user/auth/google", "_self")
-
+        const width = 600, height = 700;
+        const left = window.screenX + (window.outerWidth - width) / 2;
+        const top = window.screenY + (window.outerHeight - height) / 2;
+        window.open(
+            'http://localhost:8000/api/user/auth/google',
+            'Google Login',
+            `toolbar=no, menubar=no, width=${width}, height=${height}, top=${top}, left=${left}`
+        );
     };
 
+
     return (
-        // <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        //     <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-80">
-        //         <h2 className="text-xl font-bold mb-4 text-center">Login</h2>
-        //         {error && <p className="text-red-500 text-sm">{error}</p>}
-        //         <input
-        //             type="email"
-        //             name="email"
-        //             value={form.email}
-        //             onChange={handleChange}
-        //             placeholder="Email"
-        //             required
-        //             className="w-full px-3 py-2 border rounded mb-3"
-        //         />
-        //         <input
-        //             type="password"
-        //             name="password"
-        //             value={form.password}
-        //             onChange={handleChange}
-        //             placeholder="Password"
-        //             required
-        //             className="w-full px-3 py-2 border rounded mb-4"
-        //         />
-
-        //         {isUserLogin && (
-        //             <div onClick={handleRegisterNavigate} className="mt-4 text-center cursor-pointer">
-        //                 <p className="text-sm">
-        //                     Don't have an account?{" "}
-        //                     <span className="text-blue-500 hover:underline">
-        //                         Register here
-        //                     </span>
-        //                 </p>
-        //             </div>
-        //         )}
-
-        //         <button type="submit" className="bg-blue-500 text-white w-full mt-4 py-2 rounded hover:bg-blue-600 cursor-pointer">
-        //             Login
-        //         </button>
-        //     </form>
-        // </div>
-
-
         isUserLogin ? (
             <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4" >
                 <form>

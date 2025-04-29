@@ -1,14 +1,14 @@
-const dotenv = require('dotenv');
+require('dotenv').config();
 const express = require('express');
 const session = require("express-session");
-const passport = require("passport");
 const cors = require('cors');
-dotenv.config();
+const passport = require('passport');
 require('./src/db/conn')
 const errorHandler = require("./src/middleware/errorHandler");
 require('./src/utils/passport.js');
 
 const app = express();
+
 // app.use(cors());
 app.use(cors({
     origin: "http://localhost:5173",
@@ -41,5 +41,4 @@ app.use(errorHandler);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
-
 })

@@ -6,7 +6,6 @@ import Login from '../pages/Login';
 import AdminDashboard from '../pages/admin/Dashboard';
 
 import UserRegister from '../pages/user/Register';
-import GoogleSuccess from '../pages/user/GoogleSuccess';
 import UserDashboard from '../pages/user/Dashboard';
 import Profile from '../pages/user/Profile';
 
@@ -21,7 +20,6 @@ const AppRoutes = () => {
                 <Route path="/admin/login" element={<Login />} />
                 <Route path="/user/login" element={<Login />} />
                 <Route path="/user/register" element={<UserRegister />} />
-                <Route path="/google-success" element={<GoogleSuccess />} />
 
                 {/* Protected Admin Routes */}
                 <Route element={<AdminPrivateRoute />}>
